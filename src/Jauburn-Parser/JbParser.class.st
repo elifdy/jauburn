@@ -136,7 +136,11 @@ Class {
 		'stringComparisonExpression',
 		'booleanExpression',
 		'functionCallStatement',
-		'printStatement'
+		'printStatement',
+		'ifStatement',
+		'ifElseStatement',
+		'whileStatement',
+		'inputStatement'
 	],
 	#category : #'Jauburn-Parser-Core'
 }
@@ -330,7 +334,8 @@ JbParser >> start [
 JbParser >> statement [
 
 	^ variableDeclarationStatement / assignmentStatement
-	  / returnStatement / functionCallStatement / printStatement
+	  / returnStatement / functionCallStatement / printStatement /
+	ifStatement /ifElseStatement/ whileStatement /inputStatement
 ]
 
 { #category : #statements }

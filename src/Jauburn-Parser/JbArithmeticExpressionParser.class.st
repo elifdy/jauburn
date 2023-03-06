@@ -24,12 +24,13 @@ JbArithmeticExpressionParser class >> dependencies [
 { #category : #'non-terminals' }
 JbArithmeticExpressionParser >> arithmeticExpression [
 
-	^ arithmeticTerm , '+' asParser trim , arithmeticExpression
+	^ 
+	arithmeticTerm , ('+' asParser trim /'-' asParser trim ), arithmeticExpression
 	  ==> [ :arr | 
-		  JbAdditionNode new
-			  lhs: arr first;
-			  rhs: arr third;
-			  yourself ] / arithmeticTerm
+		arr second = '+'
+		ifTrue:[JbAdditionNode new lhs:(arr first);
+			 rhs: (arr third)]
+		ifFalse: [JbSubtractionNode new lhs: (arr first); rhs: (arr third)]] / arithmeticTerm.
 ]
 
 { #category : #'non-terminals' }
@@ -38,16 +39,23 @@ JbArithmeticExpressionParser >> arithmeticFactor [
 	^ '(' asParser trim , arithmeticExpression , ')' asParser trim
 	  ==> [ :arr | arr second ] / numberExpression
 	   / identifierExpression
+	
 ]
 
 { #category : #'non-terminals' }
 JbArithmeticExpressionParser >> arithmeticTerm [
 
-	^ arithmeticFactor , $* asParser trim , arithmeticTerm ==> [ :arr | 
+	^ arithmeticFactor , (('*' asParser trim / '/' asParser trim)/ '%' asParser trim), arithmeticTerm ==> 
+	[ :arr |arr second = '*'
+	ifTrue:[ 
 	  JbMultiplicationNode new
-		  lhs: arr first;
-		  rhs: arr third;
-		  yourself ] / arithmeticFactor
+		  lhs: (arr first);
+		  rhs: (arr third)] ifFalse:[ arr second = '/' ifTrue:[JbDivisionNode new
+		  lhs: (arr first);
+		  rhs: (arr third)] ifFalse:[JbIntegerModulusNode new
+		  lhs: (arr first);
+		  rhs: (arr third)] 
+	]] / arithmeticFactor
 ]
 
 { #category : #'non-terminals' }
@@ -70,7 +78,7 @@ JbArithmeticExpressionParser >> identifierExpression [
 { #category : #'non-terminals' }
 JbArithmeticExpressionParser >> numberExpression [
 
-	^ (self dependencyAt: JbNumberParser) integer ==> [ :n | 
+	^ (self dependencyAt: JbNumberParser) number ==> [ :n | 
 	  JbConstantExpressionNode new
 		  value: n;
 		  yourself ]

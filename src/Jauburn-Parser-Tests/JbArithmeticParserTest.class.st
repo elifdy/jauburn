@@ -11,6 +11,31 @@ JbArithmeticParserTest >> parserClass [
 ]
 
 { #category : #tests }
+JbArithmeticParserTest >> testAnotherArithmeticExpression [
+
+	| expression |
+
+	expression := self parse: '3-4' rule: #arithmeticExpression.
+	self assertNode: expression lhs isConstant: 3.
+	self assertNode: expression rhs isConstant: 4.
+	self assertNode: expression isOperator: $-.
+	expression := self parse: 'monkey/13' rule: #arithmeticExpression.
+	self assertNode: expression lhs isIdentifier: 'monkey'.
+	self assertNode: expression rhs isConstant: 13.
+	self assertNode: expression isOperator: $/.
+	expression := self parse: 'monkey%13' rule: #arithmeticExpression.
+	self assertNode: expression lhs isIdentifier: 'monkey'.
+	self assertNode: expression rhs isConstant: 13.
+	self assertNode: expression isOperator: $%.
+	expression := self parse: 'gyro' rule: #arithmeticExpression.
+	self assertNode: expression isIdentifier: 'gyro'.
+	expression := self parse: 'a / b / c' rule: #arithmeticExpression.
+	self assertNode: expression lhs isIdentifier: 'a'.
+	self assertNode: expression isOperator: $/
+
+]
+
+{ #category : #tests }
 JbArithmeticParserTest >> testArithmeticExpression [
 
 	| expression |
@@ -28,7 +53,7 @@ JbArithmeticParserTest >> testArithmeticExpression [
 	self assertNode: expression isIdentifier: 'falafel'.
 	expression := self parse: 'a * b * c' rule: #arithmeticExpression.
 	self assertNode: expression lhs isIdentifier: 'a'.
-	self assertNode: expression isOperator: $*.
+	self assertNode: expression isOperator: $*
 
 ]
 
