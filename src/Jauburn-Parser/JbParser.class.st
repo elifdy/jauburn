@@ -140,7 +140,7 @@ Class {
 		'ifStatement',
 		'ifElseStatement',
 		'whileStatement',
-		'inputStatement'
+		'inputNum'
 	],
 	#category : #'Jauburn-Parser-Core'
 }
@@ -289,6 +289,42 @@ JbParser >> identifierExpressionList [
 					result ] ]
 ]
 
+{ #category : #statements }
+JbParser >> ifElseStatement [
+
+
+^ifStatement, #keyword, statementBlock star==> 
+		[ :str |
+			JbIfElseNode new
+				
+				elseReturn: str third 
+				yourself ]
+]
+
+{ #category : #expressions }
+JbParser >> ifStatement [
+
+	^ ('if' asParser , $( asParser trim , identifierExpressionList
+		, $) asParser trim , statementBlock star)
+		==> [ :t | 
+			JbIfNode new
+				condition: t third;
+				ifReturn: t fifth;
+				yourself ]
+]
+
+{ #category : #statements }
+JbParser >> inputNum [
+
+
+^'while' asParser trim, $( asParser trim, expression, $) asParser trim, statementBlock ==> 
+		[ :str |
+			JbWhileNode new
+				while: str fourth
+				yourself ]
+
+]
+
 { #category : #'low-level' }
 JbParser >> keyword [ 
 
@@ -335,7 +371,7 @@ JbParser >> statement [
 
 	^ variableDeclarationStatement / assignmentStatement
 	  / returnStatement / functionCallStatement / printStatement /
-	ifStatement /ifElseStatement/ whileStatement /inputStatement
+	ifStatement /ifElseStatement/ whileStatement /inputNum
 ]
 
 { #category : #statements }
@@ -379,4 +415,16 @@ JbParser >> variableDeclarationStatement [
 		  identifier: arr second;
 		  expression: arr fourth;
 		  yourself ]
+]
+
+{ #category : #statements }
+JbParser >> whileStatement [
+
+
+^'while' asParser trim, $( asParser trim, expression, $) asParser trim, statementBlock ==> 
+		[ :str |
+			JbWhileNode new
+				while: str fourth
+				yourself ]
+
 ]
