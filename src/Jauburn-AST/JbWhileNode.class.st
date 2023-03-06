@@ -2,17 +2,38 @@ Class {
 	#name : #JbWhileNode,
 	#superclass : #JbAbstractSyntaxTreeNode,
 	#instVars : [
-		'while'
+		'condition',
+		'whileReturn'
 	],
 	#category : #'Jauburn-AST-Core'
 }
 
 { #category : #accessing }
-JbWhileNode >> while [
-^while
+JbWhileNode >> condition [
+^condition
 ]
 
 { #category : #accessing }
-JbWhileNode >> while: anObject [
-while:=anObject.
+JbWhileNode >> condition: anObject [
+condition:=anObject.
+]
+
+{ #category : #accessing }
+JbWhileNode >> executeIn: environment [
+
+	
+	| out |
+	out := self condition evaluateIn: environment.
+	^ out
+		  ifTrue: [ self whileReturn do: [ :str | str executeIn: environment ] ].
+]
+
+{ #category : #accessing }
+JbWhileNode >> whileReturn [
+^whileReturn
+]
+
+{ #category : #accessing }
+JbWhileNode >> whileReturn: anObject [
+whileReturn:=anObject.
 ]

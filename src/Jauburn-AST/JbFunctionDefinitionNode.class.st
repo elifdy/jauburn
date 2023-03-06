@@ -19,6 +19,16 @@ JbFunctionDefinitionNode >> body: anObject [
 ]
 
 { #category : #accessing }
+JbFunctionDefinitionNode >> evaluateIn: environment [
+
+	^ JbFunction new
+		  parameters: self parameters;
+		  body: self body;
+		  environment: environment;
+		  yourself
+]
+
+{ #category : #accessing }
 JbFunctionDefinitionNode >> parameters [
 	^ parameters
 ]

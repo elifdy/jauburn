@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #accessing }
+JbInputNode >> executeIn: environment [
+
+	^ inputReturn evaluateIn: environment
+]
+
+{ #category : #accessing }
 JbInputNode >> inputReturn [
 ^inputReturn
 ]

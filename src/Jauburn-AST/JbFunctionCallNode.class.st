@@ -19,6 +19,14 @@ JbFunctionCallNode >> arguments: anObject [
 ]
 
 { #category : #accessing }
+JbFunctionCallNode >> evaluateIn: environment [
+
+|out|
+out:= arguments collect: [ :str | str evaluateIn: environment].
+^(environment at:identifier) call: out in: environment.
+]
+
+{ #category : #accessing }
 JbFunctionCallNode >> identifier [
 	^ identifier
 ]

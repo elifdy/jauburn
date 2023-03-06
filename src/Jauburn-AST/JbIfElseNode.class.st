@@ -1,6 +1,6 @@
 Class {
 	#name : #JbIfElseNode,
-	#superclass : #JbAbstractSyntaxTreeNode,
+	#superclass : #JbIfNode,
 	#instVars : [
 		'elseReturn'
 	],
@@ -16,4 +16,16 @@ JbIfElseNode >> elseReturn [
 JbIfElseNode >> elseReturn:anObject [
 
 elseReturn:=anObject
+]
+
+{ #category : #accessing }
+JbIfElseNode >> executeIn: environment [
+
+	
+	| out |
+	out := self condition evaluateIn: environment.
+	^ out
+		  ifTrue: [ self ifReturn do: [ :str | str executeIn: environment ] ]
+		  ifFalse: [ 
+		  self elseReturn do: [ :str | str executeIn: environment ] ] .
 ]
